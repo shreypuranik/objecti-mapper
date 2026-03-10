@@ -24,47 +24,152 @@ business_objectives:
     summary: Simplify development environments, documentation, and internal tooling to improve team productivity.
 
 software_engineers:
-  - name: Alice Johnson
+  - name: Person A
     role: Senior Software Engineer
     personal_objectives:
       - name: Implement distributed tracing
-        summary: Add distributed tracing to core services to better diagnose reliability issues.
+        smart:
+          specific: Deploy OpenTelemetry distributed tracing across the auth, payments, and notifications services.
+          measurable: End-to-end trace visibility for 100% of API requests; MTTR reduced from 45 to under 15 minutes.
+          achievable: OpenTelemetry is industry-standard and well-supported; 3 services is a realistic one-quarter scope.
+          relevant: Enables faster incident diagnosis, directly supporting platform reliability (BO1).
+          time_bound: Complete by end of Q2.
         linked_business_objective: BO1
 
       - name: Optimize CI pipeline
-        summary: Reduce CI pipeline execution time by refactoring build steps and parallelizing jobs.
+        smart:
+          specific: Parallelise build/test jobs and implement dependency caching across all CI pipeline stages.
+          measurable: Average pipeline time reduced from 18 to under 10 minutes; at least 2 additional deployments per day.
+          achievable: Parallelisation and caching are established techniques with clear tooling support.
+          relevant: Faster pipelines directly accelerate product delivery cycles (BO2).
+          time_bound: Complete by end of Q2.
         linked_business_objective: BO2
 
       - name: Introduce security dependency scanning
-        summary: Integrate automated dependency vulnerability scanning into the build process.
+        smart:
+          specific: Integrate Snyk into the CI pipeline to scan all pull requests for known CVEs automatically.
+          measurable: 100% of PRs scanned; critical/high CVEs block merge; zero unresolved critical CVEs in production.
+          achievable: Snyk integrates with standard CI systems; blocking rules are straightforward to configure.
+          relevant: Automated scanning directly strengthens the dependency security posture (BO3).
+          time_bound: Tool live by end of Q1; zero-critical policy enforced within 30 days of deployment.
         linked_business_objective: BO3
 
-  - name: Ravindra Patel
+  - name: Person B
     role: Backend Software Engineer
     personal_objectives:
       - name: Database query optimization
-        summary: Identify and optimize slow database queries in key APIs.
-        linked_business_objective: BO4
+        smart:
+          specific: Profile and rewrite the top 10 slowest queries in the payments and orders API services.
+          measurable: Average query execution time reduced by 40%; p95 API response time below 200ms.
+          achievable: Slow query log analysis is a standard technique; 10 queries is a scoped, realistic target.
+          relevant: Faster queries reduce timeout incidents and support platform reliability (BO1).
+          time_bound: Complete by end of Q2.
+        linked_business_objective: BO1
 
       - name: Increase service unit test coverage
-        summary: Raise unit test coverage for the payments service from 60% to 85%.
+        smart:
+          specific: Write new unit tests for the payments service covering critical flows, error handling, and edge cases.
+          measurable: Coverage increases from 60% to 85%; minimum 120 new test cases written.
+          achievable: A 25-point increase is realistic with focused effort over one quarter.
+          relevant: Higher coverage reduces regressions and improves release confidence (BO5).
+          time_bound: Complete by end of Q2.
         linked_business_objective: BO5
 
       - name: Improve local development setup
-        summary: Create scripts and documentation to simplify local environment setup.
+        smart:
+          specific: Create an automated setup script and documentation for the local development environment.
+          measurable: Onboarding time cut from 2 days to under 2 hours; validated by onboarding 2 new team members.
+          achievable: Scripting env setup is well-understood; documentation is a low-risk deliverable.
+          relevant: Simplified onboarding improves developer productivity and experience (BO6).
+          time_bound: Complete by end of Q1.
         linked_business_objective: BO6
 
-  - name: Emma Clarke
+  - name: Person C
     role: Software Engineer
     personal_objectives:
       - name: Add performance benchmarking
-        summary: Implement automated performance benchmarks for critical endpoints.
+        smart:
+          specific: Implement automated benchmark tests covering the 5 highest-traffic API endpoints.
+          measurable: Baseline p50/p95/p99 metrics established in CI; regressions over 10% trigger a build failure.
+          achievable: Benchmark tooling (e.g. k6) integrates with standard CI pipelines with minimal setup.
+          relevant: Automated benchmarks enable early detection of performance regressions (BO4).
+          time_bound: Complete by end of Q2.
         linked_business_objective: BO4
 
       - name: Expand integration tests
-        summary: Add integration tests for cross-service workflows in the checkout process.
+        smart:
+          specific: Write integration tests covering the checkout workflow — cart, payment, and order confirmation.
+          measurable: 30 new tests merged; cross-service test coverage increases from 40% to 70%.
+          achievable: The checkout flow is well-documented and a focused, bounded scope for one quarter.
+          relevant: Integration tests reduce cross-service regressions in the critical checkout path (BO5).
+          time_bound: Complete by end of Q2.
         linked_business_objective: BO5
 
       - name: Improve internal developer documentation
-        summary: Write and maintain clear onboarding and architecture documentation.
+        smart:
+          specific: Write a developer onboarding guide and ADRs covering all 6 core services.
+          measurable: Documentation satisfaction score of at least 4/5 in the next team survey.
+          achievable: Existing architecture knowledge makes authoring ADRs feasible within one quarter.
+          relevant: Clear documentation reduces onboarding friction and improves developer experience (BO6).
+          time_bound: Complete by end of Q2.
+        linked_business_objective: BO6
+
+  - name: Person D
+    role: Software Engineer
+    personal_objectives:
+      - name: Add performance benchmarking
+        smart:
+          specific: Instrument the 3 core backend services with k6 load-testing suites and publish a team performance dashboard.
+          measurable: Weekly automated benchmarks running; alert fires when throughput drops below 500 RPS.
+          achievable: k6 is lightweight and integrates with CI; dashboarding is achievable via existing tooling.
+          relevant: Continuous load testing ensures the platform sustains growth targets (BO4).
+          time_bound: Complete by end of Q2.
+        linked_business_objective: BO4
+
+      - name: Expand integration tests
+        smart:
+          specific: Write integration tests for the returns and refunds cross-service workflow.
+          measurable: 25 new tests delivered; manual QA time reduced by 50%; zero untested cross-service failure paths.
+          achievable: The returns/refunds workflow is a bounded scope suitable for one quarter.
+          relevant: Automated tests reduce manual QA overhead and improve release confidence (BO5).
+          time_bound: Complete by end of Q2.
+        linked_business_objective: BO5
+
+      - name: Improve internal developer documentation
+        smart:
+          specific: Write and publish runbooks for the 5 most common production incidents.
+          measurable: Average incident resolution time reduced by 30% in the following quarter's post-incident reviews.
+          achievable: Runbooks are a well-established format; 5 incidents is a manageable, scoped target.
+          relevant: Clear runbooks reduce resolution time and improve the on-call experience (BO6).
+          time_bound: Complete by end of Q1.
+        linked_business_objective: BO6
+
+  - name: Person E
+    role: Software Engineer
+    personal_objectives:
+      - name: Add performance benchmarking
+        smart:
+          specific: Integrate benchmark tests for the reporting service into the CI pipeline.
+          measurable: p95 report-generation latency below 3 seconds for datasets up to 100k records.
+          achievable: The reporting service is a single bounded system with well-defined inputs and outputs.
+          relevant: A latency baseline prevents performance regressions from reaching production (BO4).
+          time_bound: Complete by end of Q2.
+        linked_business_objective: BO4
+
+      - name: Expand integration tests
+        smart:
+          specific: Write integration tests for the notification service's cross-service trigger paths.
+          measurable: 20 new tests; 80% branch coverage for dispatch paths; top 3 recurring bugs eliminated.
+          achievable: Notification triggers are well-understood; 20 tests is realistic within one quarter.
+          relevant: Eliminating recurring notification bugs improves reliability and test coverage (BO5).
+          time_bound: Complete by end of Q2.
+        linked_business_objective: BO5
+
+      - name: Improve internal developer documentation
+        smart:
+          specific: Create a living API contract document for all internal service interfaces, signed off by each service owner.
+          measurable: Cross-team integration bugs reduced by 40% in the following quarter.
+          achievable: Service owners are available to review; a structured contract format is reusable across teams.
+          relevant: API contracts reduce integration mismatches and improve cross-team developer experience (BO6).
+          time_bound: Complete by end of Q2.
         linked_business_objective: BO6
