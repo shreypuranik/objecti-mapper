@@ -6,6 +6,18 @@ A single-page application that visualises how individual team members' personal 
 
 ---
 
+## Installation
+
+```bash
+git clone git@github.com:shreypuranik/objecti-mapper.git
+cd objecti-mapper
+open index.html
+```
+
+No dependencies or build step required.
+
+---
+
 ## How it works
 
 Business objectives are displayed as fixed boxes in the centre of the page. Each team member's personal objective cards appear on the left or right side, connected to their linked business objective by a coloured arrow.
