@@ -2,7 +2,7 @@
 
 A single-page application that visualises how individual team members' personal objectives connect to business objectives. Open `index.html` in any browser — no server or build tools required.
 
-![Objectives Mapper screenshot](screenshot.png)
+![Objectives Mapper screenshot](./screenshots/screenshot.png)
 
 ---
 
