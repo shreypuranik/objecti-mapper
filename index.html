@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Objectives Mapper</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0a1f44;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #arrow-layer {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px;
+      background: rgba(10, 31, 68, 0.95);
+      border-bottom: 1px solid #1e3a6e;
+      z-index: 30;
+    }
+
+    header h1 {
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      color: #fff;
+    }
+
+    #legend {
+      display: flex;
+      gap: 20px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .legend-text {
+      line-height: 1.3;
+    }
+
+    .legend-name { font-weight: bold; font-size: 12px; }
+    .legend-role { color: #a0b4cc; font-size: 10px; }
+
+    #app {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      height: 100vh;
+      padding: 72px 20px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    #left-panel, #right-panel {
+      flex: 1;
+      position: relative;
+      min-height: 100%;
+    }
+
+    #center-column {
+      flex: 0 0 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-top: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .bo-box {
+      background: #1a3a6b;
+      border: 1px solid #3a6ab8;
+      border-radius: 8px;
+      padding: 14px 18px;
+      text-align: center;
+      z-index: 2;
+      position: relative;
+    }
+
+    .bo-id {
+      display: inline-block;
+      background: #3a6ab8;
+      color: #fff;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 2px 7px;
+      border-radius: 3px;
+      margin-bottom: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    .bo-name {
+      font-size: 13px;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .bo-summary {
+      font-size: 11px;
+      color: #a0b4cc;
+      line-height: 1.4;
+    }
+
+    .personal-card {
+      position: fixed;
+      width: 210px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border-left: 4px solid var(--eng-color);
+      background: #112244;
+      cursor: grab;
+      user-select: none;
+      z-index: 10;
+      transition: box-shadow 0.15s, transform 0.1s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .personal-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+
+    .personal-card.dragging {
+      cursor: grabbing;
+      z-index: 20;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+      transform: scale(1.03);
+    }
+
+    .card-engineer {
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--eng-color);
+      margin-bottom: 2px;
+    }
+
+    .card-role {
+      font-size: 10px;
+      color: #7090b0;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 5px;
+      line-height: 1.3;
+    }
+
+    .card-summary {
+      font-size: 11px;
+      color: #a0b4cc;
+      line-height: 1.4;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+  </style>
+</head>
+<body>
+
+<svg id="arrow-layer">
+  <defs>
+    <marker id="arrow-alice" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#4fc3f7"/>
+    </marker>
+    <marker id="arrow-ravi" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#a5d6a7"/>
+    </marker>
+    <marker id="arrow-emma" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#ffcc80"/>
+    </marker>
+  </defs>
+</svg>
+
+<header>
+  <h1>Objectives Mapper</h1>
+  <div id="legend"></div>
+</header>
+
+<div id="app">
+  <div id="left-panel"></div>
+  <div id="center-column"></div>
+  <div id="right-panel"></div>
+</div>
+
+<script>
+  const DATA = {
+    businessObjectives: [
+      { id: 'BO1', name: 'Improve Platform Reliability',   summary: 'Increase system uptime and reduce production incidents through better monitoring, testing, and infrastructure improvements.' },
+      { id: 'BO2', name: 'Accelerate Product Delivery',    summary: 'Reduce development cycle time by improving CI/CD pipelines and development workflows.' },
+      { id: 'BO3', name: 'Enhance Application Security',   summary: 'Strengthen security practices including dependency management, vulnerability scanning, and secure coding standards.' },
+      { id: 'BO4', name: 'Improve System Performance',     summary: 'Optimize backend services and database queries to reduce latency and improve scalability.' },
+      { id: 'BO5', name: 'Increase Test Coverage',         summary: 'Expand automated testing across services to improve confidence in releases and reduce regressions.' },
+      { id: 'BO6', name: 'Improve Developer Experience',   summary: 'Simplify development environments, documentation, and internal tooling to improve team productivity.' },
+    ],
+    engineers: [
+      {
+        id: 'alice', name: 'Alice Johnson', role: 'Senior Software Engineer',
+        color: '#4fc3f7', side: 'left',
+        objectives: [
+          { id: 'alice-1', title: 'Implement distributed tracing',         summary: 'Add distributed tracing to core services to better diagnose reliability issues.',                         bo: 'BO1' },
+          { id: 'alice-2', title: 'Optimize CI pipeline',                  summary: 'Reduce CI pipeline execution time by refactoring build steps and parallelizing jobs.',                    bo: 'BO2' },
+          { id: 'alice-3', title: 'Introduce security dependency scanning', summary: 'Integrate automated dependency vulnerability scanning into the build process.',                          bo: 'BO3' },
+        ]
+      },
+      {
+        id: 'ravi', name: 'Ravindra Patel', role: 'Backend Software Engineer',
+        color: '#a5d6a7', side: 'right',
+        objectives: [
+          { id: 'ravi-1', title: 'Database query optimization',     summary: 'Identify and optimize slow database queries in key APIs.',                                            bo: 'BO4' },
+          { id: 'ravi-2', title: 'Increase service unit test coverage', summary: 'Raise unit test coverage for the payments service from 60% to 85%.',                            bo: 'BO5' },
+          { id: 'ravi-3', title: 'Improve local development setup', summary: 'Create scripts and documentation to simplify local environment setup.',                               bo: 'BO6' },
+        ]
+      },
+      {
+        id: 'emma', name: 'Emma Clarke', role: 'Software Engineer',
+        color: '#ffcc80', side: 'right',
+        objectives: [
+          { id: 'emma-1', title: 'Add performance benchmarking',       summary: 'Implement automated performance benchmarks for critical endpoints.',                              bo: 'BO4' },
+          { id: 'emma-2', title: 'Expand integration tests',           summary: 'Add integration tests for cross-service workflows in the checkout process.',                      bo: 'BO5' },
+          { id: 'emma-3', title: 'Improve internal developer documentation', summary: 'Write and maintain clear onboarding and architecture documentation.',                       bo: 'BO6' },
+        ]
+      },
+    ]
+  };
+
+  const STATE = { dragging: null };
+  const arrowMap = {};
+
+  // Render legend
+  function renderLegend() {
+    const legend = document.getElementById('legend');
+    DATA.engineers.forEach(eng => {
+      const item = document.createElement('div');
+      item.className = 'legend-item';
+      item.innerHTML = `
+        <div class="legend-dot" style="background:${eng.color}"></div>
+        <div class="legend-text">
+          <div class="legend-name">${eng.name}</div>
+          <div class="legend-role">${eng.role}</div>
+        </div>`;
+      legend.appendChild(item);
+    });
+  }
+
+  // Render BO boxes in center column
+  function renderBOBoxes() {
+    const col = document.getElementById('center-column');
+    DATA.businessObjectives.forEach(bo => {
+      const div = document.createElement('div');
+      div.className = 'bo-box';
+      div.id = bo.id;
+      div.innerHTML = `
+        <span class="bo-id">${bo.id}</span>
+        <span class="bo-name">${bo.name}</span>
+        <span class="bo-summary">${bo.summary}</span>`;
+      col.appendChild(div);
+    });
+  }
+
+  // Create and position all personal objective cards
+  function initCards() {
+    const centerCol = document.getElementById('center-column');
+    const centerRect = centerCol.getBoundingClientRect();
+
+    DATA.engineers.forEach(eng => {
+      eng.objectives.forEach((obj, i) => {
+        const boEl = document.getElementById(obj.bo);
+        const boRect = boEl.getBoundingClientRect();
+        const boMidY = boRect.top + boRect.height / 2;
+
+        let x;
+        if (eng.side === 'left') {
+          x = centerRect.left - 230;
+        } else {
+          x = eng.id === 'ravi'
+            ? centerRect.right + 30
+            : centerRect.right + 260;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'personal-card';
+        card.id = `card-${obj.id}`;
+        card.dataset.objId = obj.id;
+        card.dataset.side = eng.side;
+        card.style.setProperty('--eng-color', eng.color);
+        card.style.top  = (boMidY - 55) + 'px';
+        card.style.left = x + 'px';
+        card.innerHTML = `
+          <div class="card-engineer">${eng.name}</div>
+          <div class="card-role">${eng.role}</div>
+          <div class="card-title">${obj.title}</div>
+          <div class="card-summary">${obj.summary}</div>`;
+        document.body.appendChild(card);
+      });
+    });
+  }
+
+  // Create SVG path elements for arrows
+  function initArrows() {
+    const svg = document.getElementById('arrow-layer');
+    DATA.engineers.forEach(eng => {
+      eng.objectives.forEach(obj => {
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('stroke', eng.color);
+        path.setAttribute('stroke-width', '2');
+        path.setAttribute('fill', 'none');
+        path.setAttribute('opacity', '0.75');
+        path.setAttribute('marker-end', `url(#arrow-${eng.id})`);
+        svg.appendChild(path);
+        arrowMap[obj.id] = { path, side: eng.side };
+      });
+    });
+  }
+
+  function getConnectorPoints(cardEl, boEl, side) {
+    const cr = cardEl.getBoundingClientRect();
+    const br = boEl.getBoundingClientRect();
+    if (side === 'left') {
+      return { x1: cr.right, y1: cr.top + cr.height / 2, x2: br.left,  y2: br.top + br.height / 2 };
+    } else {
+      return { x1: cr.left,  y1: cr.top + cr.height / 2, x2: br.right, y2: br.top + br.height / 2 };
+    }
+  }
+
+  function makeCubicBezier(x1, y1, x2, y2, side) {
+    const dx = Math.abs(x2 - x1) * 0.5;
+    if (side === 'left') {
+      return `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
+    } else {
+      return `M ${x1} ${y1} C ${x1 - dx} ${y1}, ${x2 + dx} ${y2}, ${x2} ${y2}`;
+    }
+  }
+
+  function updateAllArrows() {
+    DATA.engineers.forEach(eng => {
+      eng.objectives.forEach(obj => {
+        const cardEl = document.getElementById(`card-${obj.id}`);
+        const boEl   = document.getElementById(obj.bo);
+        const { path, side } = arrowMap[obj.id];
+        const pts = getConnectorPoints(cardEl, boEl, side);
+        path.setAttribute('d', makeCubicBezier(pts.x1, pts.y1, pts.x2, pts.y2, side));
+      });
+    });
+  }
+
+  // Drag handlers
+  function onMouseDown(e) {
+    const card = e.target.closest('.personal-card');
+    if (!card) return;
+    e.preventDefault();
+    const rect = card.getBoundingClientRect();
+    STATE.dragging = {
+      cardEl: card,
+      offsetX: e.clientX - rect.left,
+      offsetY: e.clientY - rect.top,
+    };
+    card.classList.add('dragging');
+  }
+
+  function onMouseMove(e) {
+    if (!STATE.dragging) return;
+    const { cardEl, offsetX, offsetY } = STATE.dragging;
+    cardEl.style.left = (e.clientX - offsetX) + 'px';
+    cardEl.style.top  = (e.clientY - offsetY) + 'px';
+    updateAllArrows();
+  }
+
+  function onMouseUp() {
+    if (!STATE.dragging) return;
+    STATE.dragging.cardEl.classList.remove('dragging');
+    STATE.dragging = null;
+  }
+
+  document.addEventListener('mousedown', onMouseDown);
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup',   onMouseUp);
+  window.addEventListener('resize', updateAllArrows);
+
+  // Init
+  document.addEventListener('DOMContentLoaded', () => {
+    renderLegend();
+    renderBOBoxes();
+    initArrows();
+    initCards();
+    updateAllArrows();
+  });
+</script>
+</body>
+</html>

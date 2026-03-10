@@ -1,0 +1,70 @@
+business_objectives:
+  - objective_id: BO1
+    name: Improve Platform Reliability
+    summary: Increase system uptime and reduce production incidents through better monitoring, testing, and infrastructure improvements.
+
+  - objective_id: BO2
+    name: Accelerate Product Delivery
+    summary: Reduce development cycle time by improving CI/CD pipelines and development workflows.
+
+  - objective_id: BO3
+    name: Enhance Application Security
+    summary: Strengthen security practices including dependency management, vulnerability scanning, and secure coding standards.
+
+  - objective_id: BO4
+    name: Improve System Performance
+    summary: Optimize backend services and database queries to reduce latency and improve scalability.
+
+  - objective_id: BO5
+    name: Increase Test Coverage
+    summary: Expand automated testing across services to improve confidence in releases and reduce regressions.
+
+  - objective_id: BO6
+    name: Improve Developer Experience
+    summary: Simplify development environments, documentation, and internal tooling to improve team productivity.
+
+software_engineers:
+  - name: Alice Johnson
+    role: Senior Software Engineer
+    personal_objectives:
+      - name: Implement distributed tracing
+        summary: Add distributed tracing to core services to better diagnose reliability issues.
+        linked_business_objective: BO1
+
+      - name: Optimize CI pipeline
+        summary: Reduce CI pipeline execution time by refactoring build steps and parallelizing jobs.
+        linked_business_objective: BO2
+
+      - name: Introduce security dependency scanning
+        summary: Integrate automated dependency vulnerability scanning into the build process.
+        linked_business_objective: BO3
+
+  - name: Ravindra Patel
+    role: Backend Software Engineer
+    personal_objectives:
+      - name: Database query optimization
+        summary: Identify and optimize slow database queries in key APIs.
+        linked_business_objective: BO4
+
+      - name: Increase service unit test coverage
+        summary: Raise unit test coverage for the payments service from 60% to 85%.
+        linked_business_objective: BO5
+
+      - name: Improve local development setup
+        summary: Create scripts and documentation to simplify local environment setup.
+        linked_business_objective: BO6
+
+  - name: Emma Clarke
+    role: Software Engineer
+    personal_objectives:
+      - name: Add performance benchmarking
+        summary: Implement automated performance benchmarks for critical endpoints.
+        linked_business_objective: BO4
+
+      - name: Expand integration tests
+        summary: Add integration tests for cross-service workflows in the checkout process.
+        linked_business_objective: BO5
+
+      - name: Improve internal developer documentation
+        summary: Write and maintain clear onboarding and architecture documentation.
+        linked_business_objective: BO6
