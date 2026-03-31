@@ -165,6 +165,12 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
 
+    .personal-card.unlinked {
+      border-left: none;
+      border: 2px dashed var(--eng-color);
+      opacity: 0.75;
+    }
+
     .personal-card:hover {
       transform: scale(1.02);
       box-shadow: 0 4px 16px rgba(0,0,0,0.4);
@@ -261,6 +267,7 @@
           { id: 'persona-1', title: 'Implement distributed tracing',         bo: 'BO1', smart: { specific: 'Deploy OpenTelemetry distributed tracing across the auth, payments, and notifications services.', measurable: 'End-to-end trace visibility for 100% of API requests; MTTR reduced from 45 to under 15 minutes.', achievable: 'OpenTelemetry is industry-standard and well-supported; 3 services is a realistic one-quarter scope.', relevant: 'Enables faster incident diagnosis, directly supporting platform reliability (BO1).', time_bound: 'Complete by end of Q2.' } },
           { id: 'persona-2', title: 'Optimize CI pipeline',                  bo: 'BO2', smart: { specific: 'Parallelise build/test jobs and implement dependency caching across all CI pipeline stages.', measurable: 'Average pipeline time reduced from 18 to under 10 minutes; at least 2 additional deployments per day.', achievable: 'Parallelisation and caching are established techniques with clear tooling support.', relevant: 'Faster pipelines directly accelerate product delivery cycles (BO2).', time_bound: 'Complete by end of Q2.' } },
           { id: 'persona-3', title: 'Introduce security dependency scanning', bo: 'BO3', smart: { specific: 'Integrate Snyk into the CI pipeline to scan all pull requests for known CVEs automatically.', measurable: '100% of PRs scanned; critical/high CVEs block merge; zero unresolved critical CVEs in production.', achievable: 'Snyk integrates with standard CI systems; blocking rules are straightforward to configure.', relevant: 'Automated scanning directly strengthens the dependency security posture (BO3).', time_bound: 'Tool live by end of Q1; zero-critical policy enforced within 30 days of deployment.' } },
+          { id: 'persona-4', title: 'Explore ML-based anomaly detection', bo: null, smart: { specific: 'Research and prototype an ML model to detect anomalies in service latency metrics.', measurable: 'Proof-of-concept demo delivered to the team.', achievable: 'Exploratory work, not yet tied to a business objective.', relevant: 'TBD — pending business objective alignment.', time_bound: 'Initial findings by end of Q3.' } },
         ]
       },
       {
@@ -370,12 +377,20 @@
   function initCards() {
     const centerCol = document.getElementById('center-column');
     const centerRect = centerCol.getBoundingClientRect();
+    const unlinkedCountBySide = { left: 0, right: 0 };
 
     DATA.engineers.forEach(eng => {
       eng.objectives.forEach((obj, i) => {
-        const boEl = document.getElementById(obj.bo);
-        const boRect = boEl.getBoundingClientRect();
-        const boMidY = boRect.top + boRect.height / 2;
+        let boMidY;
+        if (obj.bo) {
+          const boEl = document.getElementById(obj.bo);
+          const boRect = boEl.getBoundingClientRect();
+          boMidY = boRect.top + boRect.height / 2;
+        } else {
+          // Stack unlinked cards below the main content area
+          const idx = unlinkedCountBySide[eng.side]++;
+          boMidY = window.innerHeight - 120 - idx * 130;
+        }
 
         let x;
         const rightOffsets = { personb: 30, personc: 270, persond: 510, persone: 750 };
@@ -386,7 +401,7 @@
         }
 
         const card = document.createElement('div');
-        card.className = 'personal-card';
+        card.className = 'personal-card' + (obj.bo ? '' : ' unlinked');
         card.id = `card-${obj.id}`;
         card.dataset.objId = obj.id;
         card.dataset.side = eng.side;
@@ -416,6 +431,7 @@
     const svg = document.getElementById('arrow-layer');
     DATA.engineers.forEach(eng => {
       eng.objectives.forEach(obj => {
+        if (!obj.bo) return; // no arrow for unlinked objectives
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path.setAttribute('stroke', eng.color);
         path.setAttribute('stroke-width', '2');
@@ -450,6 +466,7 @@
   function updateAllArrows() {
     DATA.engineers.forEach(eng => {
       eng.objectives.forEach(obj => {
+        if (!obj.bo) return; // no arrow for unlinked objectives
         const cardEl = document.getElementById(`card-${obj.id}`);
         const boEl   = document.getElementById(obj.bo);
         const { path, side } = arrowMap[obj.id];
